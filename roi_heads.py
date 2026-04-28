@@ -7,8 +7,8 @@ from torchvision.models.detection.roi_heads import det_utils, keypointrcnn_infer
 from torchvision.models.detection.roi_heads import project_masks_on_boxes, maskrcnn_loss
 from torchvision.ops import boxes as box_ops, roi_align
 from typing import Dict, List, Optional, Tuple
-from losses.huff_loss import hausdorff_dice_loss_from_logits_slitnet_tf_equiv
-from losses.focal import focal_loss_multiclass
+from huff_loss import hausdorff_dice_loss_from_logits_slitnet_tf_equiv
+from focal import focal_loss_multiclass
 
 def fastrcnn_loss_focal(class_logits, box_regression, labels, regression_targets):
     labels = torch.cat(labels, dim=0)
@@ -378,10 +378,10 @@ class SLITRoIHeads(nn.Module):
 
                 gt_masks = [t["masks"] for t in targets]
                 gt_labels = [t["labels"] for t in targets]
-                rcnn_loss_mask_1 = maskrcnn_loss_slitnet(mask_logits, mask_proposals, gt_masks, gt_labels, pos_matched_idxs)
+                rcnn_loss_mask_1 = maskrcnn_loss_slitnet(mask_logits, mask_proposals, gt_masks, gt_labels, pos_matched_idxs) #huf
                 rcnn_loss_mask_2 = maskrcnn_loss(mask_logits, mask_proposals, gt_masks, gt_labels,
                                                        pos_matched_idxs)##########################
-                rcnn_loss_mask = 0.1 * rcnn_loss_mask_1 + 0.9 * rcnn_loss_mask_2
+                rcnn_loss_mask = 0.3*rcnn_loss_mask_1 + 0.7*rcnn_loss_mask_2 ##############################################################33
                 loss_mask = {"loss_mask": rcnn_loss_mask}
             else:
                 labels = [r["labels"] for r in result]

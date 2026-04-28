@@ -6,7 +6,7 @@ from torch import Tensor
 from torch import Tensor
 from torchvision.models.detection.rpn import RegionProposalNetwork
 import torch.nn.functional as F
-from losses.focal import binary_focal_loss_with_logits
+from focal import binary_focal_loss_with_logits
 
 
 
